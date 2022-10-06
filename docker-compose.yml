@@ -1,0 +1,37 @@
+version: '2.4'
+services:
+  borgmatic:
+    container_name: borgmatic
+    hostname: docker_borgmatic
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      # Backup dirs
+      - homeassistant_hassio_addons:/mnt/source/addons:ro
+      - homeassistant_hassio_config:/mnt/source/config:ro
+      - homeassistant_hassio_media:/mnt/source/media:ro
+      - homeassistant_hassio_share:/mnt/source/share:ro
+      - homeassistant_hassio_ssl:/mnt/source/ssl:ro
+      - node_red_data:/mnt/source/data:ro
+      # Config
+      - ./config/borgmatic:/etc/borgmatic.d:ro
+      - borg-config:/root/.config/borg
+      - borg-ssh:/root/.ssh
+      # Temporary cache files (can be recreated, but cache will speed up backups)
+      - ./tmp/cache:/root/.cache/borg/
+    environment:
+      - TZ=Europe/Berlin
+      - BORG_PASSPHRASE=${BORG_PASSPHRASE}
+
+    image: modem7/borgmatic-docker
+    restart: always
+
+volumes:
+  homeassistant_hassio_addons:
+  homeassistant_hassio_config:
+  homeassistant_hassio_media:
+  homeassistant_hassio_share:
+  homeassistant_hassio_ssl:
+  node_red_data:
+  borg-config:
+  borg-ssh:

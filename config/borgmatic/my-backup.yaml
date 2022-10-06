@@ -1,0 +1,36 @@
+location:
+  source_directories:
+    - /mnt/source
+  exclude_patterns:
+    - '*.pyc'
+  repositories:
+    - ssh://vt99f3v6@vt99f3v6.repo.borgbase.com/./repo
+
+retention:
+  keep_within: 24H
+  keep_daily: 7
+  keep_weekly: 4
+  keep_monthly: 6
+  keep_yearly: 3
+
+  prefix: container_backup-
+
+consistency:
+  checks:
+    - repository
+    - archives
+  check_last: 3
+  prefix: container_backup-
+
+storage:
+  # Hostname not used, because it will change in docker container
+  archive_name_format: 'container_backup-{now}'
+  compression: lz4
+
+hooks:
+  before_backup:
+    - echo "Starting backup job"
+  after_backup:
+    - echo "Backup created."
+  on_error:
+    - echo "Error while creating a backup."
