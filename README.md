@@ -1,2 +1,2 @@
 # borg-docker
-Docker image to easily create containerized borg backups
+Docker compose file to easily create containerized borg backups
